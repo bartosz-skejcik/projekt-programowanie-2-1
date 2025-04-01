@@ -1,4 +1,5 @@
-﻿using System.Drawing;
+﻿using System;
+using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Windows.Forms;
 
@@ -36,7 +37,11 @@ namespace ProjektNr1Paczesny72541
 
             public virtual void Draw(Graphics g)
             {
-                if (Visible) return;
+                if (Visible)
+                {
+                    Console.WriteLine("Point is already visible, cannot draw again.");
+                    return;
+                }
                 
                 using (SolidBrush brush = new SolidBrush(Color))
                 {
@@ -48,7 +53,11 @@ namespace ProjektNr1Paczesny72541
             
             public virtual void Erase(Graphics g, Control c)
             {
-                if (!Visible) return;
+                if (!Visible)
+                {
+                    Console.WriteLine("Point is not visible, cannot erase.");
+                    return;
+                }
                 
                 using (SolidBrush brush = new SolidBrush(c.BackColor))
                 {
@@ -69,32 +78,12 @@ namespace ProjektNr1Paczesny72541
             }
             
             // declaring public methods (accessible for other classes)
-            public void SetAttributes(Color? lineColor, DashStyle? dashStyle, int? x, int? y, float? lineWidth) 
+            public void SetAttributes(Color lineColor, DashStyle dashStyle, float lineWidth) 
             {
-                if (lineColor != null)
-                {
-                    Color = (Color)lineColor;
-                }
-                
-                if (dashStyle != null)
-                {
-                    DashStyle = (DashStyle)dashStyle;
-                }
-                
-                if (x != null)
-                {
-                    X = (int)x;
-                }
-                
-                if (y != null)
-                {
-                    Y = (int)y;
-                }
-                
-                if (lineWidth != null)
-                {
-                    LineWidth = (float)lineWidth;
-                }
+                Console.WriteLine( $"Setting attributes: Color: {lineColor}, DashStyle: {dashStyle}, LineWidth: {lineWidth}" );
+                Color = lineColor;
+                DashStyle = dashStyle;
+                LineWidth = lineWidth;
             }
         }
         
@@ -116,7 +105,11 @@ namespace ProjektNr1Paczesny72541
 
             public override void Draw(Graphics g)
             {
-                if (Visible) return;
+                if (Visible)
+                {
+                    Console.WriteLine("Line is already visible, cannot draw again.");
+                    return;
+                }
                 
                 using (Pen pen = new Pen(Color, LineWidth) { DashStyle = DashStyle })
                 {
@@ -128,7 +121,11 @@ namespace ProjektNr1Paczesny72541
             
             public override void Erase(Graphics g, Control c)
             {
-                if (!Visible) return;
+                if (!Visible)
+                {
+                    Console.WriteLine("Line is not visible, cannot erase.");
+                    return;
+                }
                 
                 using (SolidBrush brush = new SolidBrush(c.BackColor))
                 {
@@ -146,6 +143,100 @@ namespace ProjektNr1Paczesny72541
                 Yk = y;
                 
                 Draw(g);
+            }
+        } // class Line end
+
+        public class Elipse : Point
+        {
+            protected int BigAxis, SmallAxis;
+
+            public Elipse(int x, int y, int bigAxis, int smallAxis) : base(x, y)
+            {
+                BigAxis = bigAxis;
+                SmallAxis = smallAxis;
+            }
+
+            public Elipse(int x, int y, int bigAxis, int smallAxis, Color lineColor, DashStyle lineStyle, int lineWidth) : this(x, y, bigAxis, smallAxis)
+            {
+                Color = lineColor;
+                DashStyle = lineStyle;
+                LineWidth = lineWidth;
+            }
+
+            public override void Draw(Graphics g)
+            {
+                if (Visible)
+                {
+                    Console.WriteLine("Elipse is already visible, cannot draw again.");
+                    return;
+                }
+                
+                using (Pen pen = new Pen(Color, LineWidth) { DashStyle = DashStyle })
+                {
+                    g.DrawEllipse(pen, X - BigAxis / 2, Y - SmallAxis / 2, BigAxis, SmallAxis);
+                }
+                
+                Visible = true;
+            }
+
+            public override void Erase(Graphics g, Control c)
+            {
+                if (!Visible)
+                {
+                    Console.WriteLine("Elipse is not visible, cannot erase.");
+                    return;
+                }
+                
+                using (SolidBrush brush = new SolidBrush(c.BackColor))
+                {
+                    g.FillEllipse(brush, X - BigAxis / 2, Y - SmallAxis / 2, BigAxis, SmallAxis);
+                }
+                
+                Visible = false;
+            }
+        } // class Elipse end
+
+        public class Circle : Elipse
+        {
+            protected int Radius;
+            
+            public Circle(int x, int y, int radius) : base(x, y, radius, radius)
+            {
+                Radius = radius;
+            }
+            
+            public Circle(int x, int y, int radius, Color lineColor, DashStyle lineStyle, int lineWidth) : base(x, y, radius, radius, lineColor, lineStyle, lineWidth) { }
+            
+            public override void Draw(Graphics g)
+            {
+                if (Visible)
+                {
+                    Console.WriteLine("Circle is already visible, cannot draw again.");
+                    return;
+                }
+                
+                using (Pen pen = new Pen(Color, LineWidth) { DashStyle = DashStyle })
+                {
+                    g.DrawEllipse(pen, X - Radius, Y - Radius, Radius * 2, Radius * 2);
+                }
+                
+                Visible = true;
+            }
+            
+            public override void Erase(Graphics g, Control c)
+            {
+                if (!Visible)
+                {
+                    Console.WriteLine("Circle is not visible, cannot erase.");
+                    return;
+                }
+                
+                using (SolidBrush brush = new SolidBrush(c.BackColor))
+                {
+                    g.FillEllipse(brush, X - Radius, Y - Radius, Radius * 2, Radius * 2);
+                }
+                
+                Visible = false;
             }
         }
     }

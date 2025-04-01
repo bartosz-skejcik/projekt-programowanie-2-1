@@ -34,6 +34,7 @@ namespace ProjektNr1Paczesny72541
             bpTxtShapesCount.Location = new Point(FormMargin, bpLblShapesCount.Bottom + Margin);
             bpBtnStart.Location = new Point(FormMargin, bpTxtShapesCount.Bottom + Margin);
             bpBtnMoveShape.Location = new Point(FormMargin, bpBtnStart.Bottom + Margin);
+            bpBtnSetRandomAttributes.Location = new Point(FormMargin, bpBtnMoveShape.Bottom + Margin);
 
             // PictureBox positioning and sizing
             int pictureBoxX = bpLblShapesCount.Right + FormMargin;
@@ -126,8 +127,8 @@ namespace ProjektNr1Paczesny72541
             CheckedListBox.CheckedItemCollection selectedShapes = bpShapesList.CheckedItems;
             bpShapesList.Enabled = false;
 
-            int randomShapeIndex;
-            string randomShape;
+            int currentShapeIndex;
+            string currentShape;
             
             Random rnd = new Random();
 
@@ -135,6 +136,9 @@ namespace ProjektNr1Paczesny72541
             int YMax = bpPictureBox.Height;
             int Xp, Yp, Xk, Yk;
             int circleRadius, bigAxis, smallAxis;
+            Color color;
+            DashStyle dashStyle;
+            int lineWidth;
             int width, height;
             int SquareSide;
             int polygonDegree;
@@ -143,36 +147,47 @@ namespace ProjektNr1Paczesny72541
             {
                 Xp = rnd.Next(FormMargin, XMax - FormMargin);
                 Yp = rnd.Next(FormMargin, YMax - FormMargin);
-                randomShapeIndex = rnd.Next(selectedShapes.Count);
-                randomShape = selectedShapes[randomShapeIndex].ToString();
+                currentShapeIndex = rnd.Next(selectedShapes.Count);
+                currentShape = selectedShapes[currentShapeIndex].ToString();
 
-                switch (randomShape)
+                switch (currentShape)
                 {
                     case "Punkt":
                         bpTFG[IndexTFG] = new GeometricShapes.Point(Xp, Yp);
-                        bpTFG[IndexTFG].Draw(drawingBoard);
-                        bpPictureBox.Refresh(); 
                         IndexTFG++;
                         break;
                     case "Linia":
                         Xk = rnd.Next(FormMargin, XMax - FormMargin);
                         Yk = rnd.Next(FormMargin, YMax - FormMargin);
                         bpTFG[IndexTFG] = new Line(Xp, Yp, Xk, Yk);
-                        bpTFG[IndexTFG].Draw(drawingBoard);
-                        bpPictureBox.Refresh(); 
+                        
                         IndexTFG++;
                         break;
-                    // case "Koło":
-                    //     circleRadius = rnd.Next(1, 100);
-                    //     bpTFG[IndexTFG] = new Circle(Xp, Yp, circleRadius);
-                    //     IndexTFG++;
-                    //     break;
-                    // case "Elipsa":
-                    //     bigAxis = rnd.Next(1, 100);
-                    //     smallAxis = rnd.Next(1, 100);
-                    //     bpTFG[IndexTFG] = new Ellipse(Xp, Yp, bigAxis, smallAxis);
-                    //     IndexTFG++;
-                    //     break;
+                    case "Okrąg":
+                        circleRadius = rnd.Next(1, 100);
+                        do
+                        {
+                            color = Color.FromArgb(rnd.Next(256), rnd.Next(256), rnd.Next(256));
+                        } while (color == Color.Beige);
+                        dashStyle = (DashStyle)rnd.Next(5);
+                        lineWidth = (int)(rnd.NextDouble() * 10);
+                        bpTFG[IndexTFG] = new Circle(Xp, Yp, circleRadius, color, dashStyle, lineWidth);
+                        
+                        IndexTFG++;
+                        break;
+                    case "Elipsa":
+                        bigAxis = rnd.Next(1, 100);
+                        smallAxis = rnd.Next(1, 100);
+                        do
+                        {
+                            color = Color.FromArgb(rnd.Next(256), rnd.Next(256), rnd.Next(256));
+                        } while (color == Color.Beige);
+                        dashStyle = (DashStyle)rnd.Next(5);
+                        lineWidth = (int)(rnd.NextDouble() * 10);
+                        bpTFG[IndexTFG] = new Elipse(Xp, Yp, bigAxis, smallAxis, color, dashStyle, lineWidth);
+                        
+                        IndexTFG++;
+                        break;
                     // case "Prostokąt":
                     //     width = rnd.Next(1, 100);
                     //     height = rnd.Next(1, 100);
@@ -190,11 +205,21 @@ namespace ProjektNr1Paczesny72541
                     //     IndexTFG++;
                     //     break;
                     default:
-                        MessageBox.Show("Wylosowana została figura o nazwie: " + randomShape + " ale jest ona w trakcie realizacji", "Informacja", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        MessageBox.Show("Wylosowana została figura o nazwie: " + currentShape + " ale jest ona w trakcie realizacji", "Informacja", MessageBoxButtons.OK, MessageBoxIcon.Information);
                         break;
                 } // switch case end
                 
             } // for loop end
+            
+            for (int i = 0; i < IndexTFG; i++)
+            {
+                if (bpTFG[i] != null)
+                {
+                    bpTFG[i].Draw(drawingBoard);
+                }
+            } // for loop end
+            
+            bpPictureBox.Refresh();
             
             bpShapesList.Enabled = true;
             bpBtnMoveShape.Enabled = true;
@@ -232,6 +257,44 @@ namespace ProjektNr1Paczesny72541
             }
         
             bpPictureBox.Refresh();
-        }    
+        }
+
+        private void bpBtnSetRandomAttributes_Click(object sender, EventArgs e)
+        {
+            Random rnd = new Random();
+
+            Color color;
+            DashStyle dashStyle;
+            int X, Y;
+            float lineWidth;
+            
+            drawingBoard.Clear(Color.Beige);
+            
+            for (int i = 0; i < IndexTFG; i++)
+            {
+                if (bpTFG[i] != null)
+                {
+                    bpTFG[i].Erase(drawingBoard, bpPictureBox);
+                    
+                    do
+                    {
+                        color = Color.FromArgb(rnd.Next(256), rnd.Next(256), rnd.Next(256));
+                    } while (color == Color.Beige);
+                    
+                    dashStyle = (DashStyle)rnd.Next(0, 5);
+                    lineWidth = (float)rnd.NextDouble() * 10;
+
+                    bpTFG[i].SetAttributes(color, dashStyle, lineWidth);
+                    
+                    bpTFG[i].Draw(drawingBoard);
+                } // if end
+                else
+                {
+                    Console.WriteLine($"bpTFG[{i}] is null");
+                }
+            } // for loop end
+            
+            bpPictureBox.Refresh();
+        } // bpBtnSetRandomAttributes_Click end
     }
 }

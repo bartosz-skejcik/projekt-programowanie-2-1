@@ -37,6 +37,7 @@ namespace ProjektNr1Paczesny72541
             this.bpBtnStart = new System.Windows.Forms.Button();
             this.bpPictureBox = new System.Windows.Forms.PictureBox();
             this.bpBtnMoveShape = new System.Windows.Forms.Button();
+            this.bpBtnSetRandomAttributes = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.bpPictureBox)).BeginInit();
             this.SuspendLayout();
             // 
@@ -98,11 +99,22 @@ namespace ProjektNr1Paczesny72541
             this.bpBtnMoveShape.UseVisualStyleBackColor = true;
             this.bpBtnMoveShape.Click += new System.EventHandler(this.bpBtnMoveShape_Click);
             // 
+            // bpBtnSetRandomAttributes
+            // 
+            this.bpBtnSetRandomAttributes.Location = new System.Drawing.Point(12, 165);
+            this.bpBtnSetRandomAttributes.Name = "bpBtnSetRandomAttributes";
+            this.bpBtnSetRandomAttributes.Size = new System.Drawing.Size(100, 23);
+            this.bpBtnSetRandomAttributes.TabIndex = 6;
+            this.bpBtnSetRandomAttributes.Text = "Losowe atrybuty";
+            this.bpBtnSetRandomAttributes.UseVisualStyleBackColor = true;
+            this.bpBtnSetRandomAttributes.Click += new System.EventHandler(this.bpBtnSetRandomAttributes_Click);
+            // 
             // bpCockpitLaboratory
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 450);
+            this.Controls.Add(this.bpBtnSetRandomAttributes);
             this.Controls.Add(this.bpBtnMoveShape);
             this.Controls.Add(this.bpPictureBox);
             this.Controls.Add(this.bpBtnStart);
@@ -116,6 +128,8 @@ namespace ProjektNr1Paczesny72541
             this.ResumeLayout(false);
             this.PerformLayout();
         }
+
+        private System.Windows.Forms.Button bpBtnSetRandomAttributes;
 
         private System.Windows.Forms.Button bpBtnMoveShape;
 
