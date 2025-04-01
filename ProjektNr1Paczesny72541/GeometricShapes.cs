@@ -67,6 +67,35 @@ namespace ProjektNr1Paczesny72541
                 
                 Draw(g);
             }
+            
+            // declaring public methods (accessible for other classes)
+            public void SetAttributes(Color? lineColor, DashStyle? dashStyle, int? x, int? y, float? lineWidth) 
+            {
+                if (lineColor != null)
+                {
+                    Color = (Color)lineColor;
+                }
+                
+                if (dashStyle != null)
+                {
+                    DashStyle = (DashStyle)dashStyle;
+                }
+                
+                if (x != null)
+                {
+                    X = (int)x;
+                }
+                
+                if (y != null)
+                {
+                    Y = (int)y;
+                }
+                
+                if (lineWidth != null)
+                {
+                    LineWidth = (float)lineWidth;
+                }
+            }
         }
         
         public class Line : Point

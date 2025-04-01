@@ -196,30 +196,23 @@ namespace ProjektNr1Paczesny72541
                 
             } // for loop end
             
-            // activate the rest of the inputs in the form
-            // ...
             bpShapesList.Enabled = true;
             bpBtnMoveShape.Enabled = true;
             
-            // deactivate the start button
             bpBtnStart.Enabled = false;
 
         } // bpBtnStart_Click end
 
-        // This function moves all the points in the bpTFG array by a random x and y values
         private void bpBtnMoveShape_Click(object sender, EventArgs e)
         {
-            // Check if there are any shapes to move
             if (IndexTFG == 0 || bpTFG == null)
             {
                 MessageBox.Show("Brak figur do przesunięcia.", "Informacja", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 return;
             }
         
-            // Generate random offsets
             Random rnd = new Random();
         
-            // Clear the drawing board
             drawingBoard.Clear(Color.Beige);
 
             int Xmax, Ymax;
@@ -227,7 +220,6 @@ namespace ProjektNr1Paczesny72541
             Xmax = bpPictureBox.Width;
             Ymax = bpPictureBox.Height;
         
-            // Move and redraw each shape
             for (int i = 0; i < IndexTFG; i++)
             {
                 if (bpTFG[i] != null)
@@ -239,7 +231,6 @@ namespace ProjektNr1Paczesny72541
                 }
             }
         
-            // Refresh the picture box to show the new drawing
             bpPictureBox.Refresh();
         }    
     }
