@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Drawing;
 using System.Drawing.Drawing2D;
+using System.Timers;
 using System.Windows.Forms;
 using static ProjektNr1Paczesny72541.GeometricShapes;
 using Point = System.Drawing.Point;
@@ -35,6 +36,10 @@ namespace ProjektNr1Paczesny72541
             bpBtnStart.Location = new Point(FormMargin, bpTxtShapesCount.Bottom + Margin);
             bpBtnMoveShape.Location = new Point(FormMargin, bpBtnStart.Bottom + Margin);
             bpBtnSetRandomAttributes.Location = new Point(FormMargin, bpBtnMoveShape.Bottom + Margin);
+            bpBtnTurnOnSlider.Location = new Point(FormMargin, bpBtnSetRandomAttributes.Bottom + Margin);
+            bpGrBoxViewStyle.Location = new Point(FormMargin, bpBtnTurnOnSlider.Bottom + Margin);
+            bpGrBoxNavigation.Location = new Point(FormMargin, bpGrBoxViewStyle.Bottom + Margin);
+            bpBtnTurnOfSlider.Location = new Point(FormMargin, bpGrBoxNavigation.Bottom + Margin);
 
             // PictureBox positioning and sizing
             int pictureBoxX = bpLblShapesCount.Right + FormMargin;
@@ -57,8 +62,9 @@ namespace ProjektNr1Paczesny72541
             bpShapesList.Location = new Point(listX, listY);
             bpShapesList.Size = new Size(
                 this.ClientSize.Width - listX - FormMargin,
-                this.ClientSize.Height - FormMargin - listY
+                (int)(this.ClientSize.Height * 0.7F - FormMargin - listY)
             );
+            bpGrBoxAttrChange.Location = new Point(this.ClientSize.Width - bpGrBoxAttrChange.Width - FormMargin, bpShapesList.Bottom + Margin);
         }
         private void bpCockpitLaboratory_FormClosing(object sender, FormClosingEventArgs e)
         {
@@ -296,5 +302,121 @@ namespace ProjektNr1Paczesny72541
             
             bpPictureBox.Refresh();
         } // bpBtnSetRandomAttributes_Click end
+
+        private void bpBtnTurnOnSlider_Click(object sender, EventArgs e)
+        {
+            // turn off the error provider
+            
+            drawingBoard.Clear(bpPictureBox.BackColor);
+
+            int XMax = bpPictureBox.Width;
+            int YMax = bpPictureBox.Height;
+            
+            // ustawic indeks pierwszej figury do wyswietlenia
+            bpTimer.Tag = 0;
+            bpTxtIndexTVG.Text = "0";
+            
+            bpTFG[0].Move(drawingBoard, bpPictureBox, XMax / 2, YMax / 2);
+            
+            bpPictureBox.Refresh();
+            
+            // rozpoznanie wybranego trybu prezentacji figur
+
+            if (bpRdBtnInterval.Checked)
+            {
+                bpTimer.Enabled = true;
+            }
+            else
+            {
+                bpGrBoxNavigation.Enabled = true;
+                bpGrBoxAttrChange.Enabled = true;
+                
+                // set values for tools responsible for changing the attributes of shapes
+                bpTBarX.Maximum = XMax;
+                bpTBarX.Value = XMax / 2;
+                
+                bpTBarY.Maximum = YMax;
+                bpTBarY.Value = YMax / 2;
+
+                // set background color of the color picker to the color of the first shape
+                bpBtnColorPicker.BackColor = bpTFG[0].Color;
+
+                bpCBoxLineStyle.SelectedItem = bpTFG[0].DashStyle;
+                
+                bpNumUpDownLineThicknes.Value = (decimal)bpTFG[0].LineWidth;
+            }
+            
+            // deactivate the button
+            bpBtnTurnOnSlider.Enabled = false;
+            // activate the button to turn off the slider
+            bpBtnTurnOfSlider.Enabled = true;
+        }
+
+        private void bpTimer_Tick(object sender, EventArgs e)
+        {
+            drawingBoard.Clear(bpPictureBox.BackColor);
+
+            int XMax = bpPictureBox.Width;
+            int YMax = bpPictureBox.Height;
+            
+            // presenting the next geometric shape in the central part of the bpPictureBox
+            bpTFG[(int)bpTimer.Tag].Move(drawingBoard, bpPictureBox, XMax/2, YMax/2);
+            
+            bpPictureBox.Refresh();
+            
+            // wyznaczenie indeksu nastepnej figury do prezentacji
+
+            bpTimer.Tag = ((int)bpTimer.Tag + 1) % IndexTFG;
+            bpTxtIndexTVG.Text = bpTimer.Tag.ToString();
+        }
+
+        private void bpBtnNext_Click(object sender, EventArgs e)
+        {
+            // validate the index
+            ValidationResult<int> result = Helpers.ValidateInt(bpTxtIndexTVG.Text);
+
+            if (!result.Success)
+            {
+                MessageBox.Show(result.Message);
+                bpTxtIndexTVG.Text = "";
+            }
+
+            int bpShapeIndex = result.ParsedValue;
+            
+            bpTFG[bpShapeIndex].Erase(drawingBoard, bpPictureBox);
+
+            if (bpShapeIndex < IndexTFG)
+            {
+                bpShapeIndex++;
+            }
+            else
+            {
+                bpShapeIndex = 0;
+            }
+
+            int XMax = bpPictureBox.Width;
+            int YMax = bpPictureBox.Height;
+            
+            // set values for tools responsible for changing the attributes of shapes
+            bpTBarX.Maximum = XMax;
+            bpTBarX.Value = XMax / 2;
+            
+            bpTBarY.Maximum = YMax;
+            bpTBarY.Value = YMax / 2;
+
+            // set background color of the color picker to the color of the first shape
+            bpBtnColorPicker.BackColor = bpTFG[bpShapeIndex].Color;
+
+            bpCBoxLineStyle.SelectedItem = bpTFG[bpShapeIndex].DashStyle;
+            
+            bpNumUpDownLineThicknes.Value = (decimal)bpTFG[bpShapeIndex].LineWidth;
+            
+            // presenting the next geometric shape in the central part of the bpPictureBox
+            bpTFG[bpShapeIndex].Move(drawingBoard, bpPictureBox, XMax/2, YMax/2);
+            
+            bpTxtIndexTVG.Text = bpShapeIndex.ToString();
+            
+            bpPictureBox.Refresh();
+        }
     }
 }
