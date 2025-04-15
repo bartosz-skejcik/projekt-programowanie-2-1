@@ -50,6 +50,9 @@ namespace ProjektNr1Paczesny72541
             this.bpBtnNext = new System.Windows.Forms.Button();
             this.bpBtnTurnOfSlider = new System.Windows.Forms.Button();
             this.bpGrBoxAttrChange = new System.Windows.Forms.GroupBox();
+            this.bpTxtColorPicker = new System.Windows.Forms.TextBox();
+            this.bpTxtTBarY = new System.Windows.Forms.TextBox();
+            this.bpTxtTBarX = new System.Windows.Forms.TextBox();
             this.label4 = new System.Windows.Forms.Label();
             this.bpNumUpDownLineThicknes = new System.Windows.Forms.NumericUpDown();
             this.bpCBoxLineStyle = new System.Windows.Forms.ComboBox();
@@ -74,7 +77,7 @@ namespace ProjektNr1Paczesny72541
             this.bpShapesList.Items.AddRange(new object[] { "Punkt", "Linia", "Elipsa", "Okrąg", "Prostokąt", "Kwadrat", "Wielokąt" });
             this.bpShapesList.Location = new System.Drawing.Point(668, 49);
             this.bpShapesList.Name = "bpShapesList";
-            this.bpShapesList.Size = new System.Drawing.Size(120, 139);
+            this.bpShapesList.Size = new System.Drawing.Size(163, 139);
             this.bpShapesList.TabIndex = 0;
             this.bpShapesList.SelectedIndexChanged += new System.EventHandler(this.bpShapesList_SelectedIndexChanged);
             // 
@@ -243,6 +246,9 @@ namespace ProjektNr1Paczesny72541
             // 
             // bpGrBoxAttrChange
             // 
+            this.bpGrBoxAttrChange.Controls.Add(this.bpTxtColorPicker);
+            this.bpGrBoxAttrChange.Controls.Add(this.bpTxtTBarY);
+            this.bpGrBoxAttrChange.Controls.Add(this.bpTxtTBarX);
             this.bpGrBoxAttrChange.Controls.Add(this.label4);
             this.bpGrBoxAttrChange.Controls.Add(this.bpNumUpDownLineThicknes);
             this.bpGrBoxAttrChange.Controls.Add(this.bpCBoxLineStyle);
@@ -254,10 +260,37 @@ namespace ProjektNr1Paczesny72541
             this.bpGrBoxAttrChange.Enabled = false;
             this.bpGrBoxAttrChange.Location = new System.Drawing.Point(668, 196);
             this.bpGrBoxAttrChange.Name = "bpGrBoxAttrChange";
-            this.bpGrBoxAttrChange.Size = new System.Drawing.Size(120, 286);
+            this.bpGrBoxAttrChange.Size = new System.Drawing.Size(163, 286);
             this.bpGrBoxAttrChange.TabIndex = 11;
             this.bpGrBoxAttrChange.TabStop = false;
             this.bpGrBoxAttrChange.Text = "Atrybuty";
+            // 
+            // bpTxtColorPicker
+            // 
+            this.bpTxtColorPicker.Location = new System.Drawing.Point(120, 115);
+            this.bpTxtColorPicker.Name = "bpTxtColorPicker";
+            this.bpTxtColorPicker.ReadOnly = true;
+            this.bpTxtColorPicker.Size = new System.Drawing.Size(37, 20);
+            this.bpTxtColorPicker.TabIndex = 13;
+            this.bpTxtColorPicker.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            // 
+            // bpTxtTBarY
+            // 
+            this.bpTxtTBarY.Location = new System.Drawing.Point(120, 84);
+            this.bpTxtTBarY.Name = "bpTxtTBarY";
+            this.bpTxtTBarY.ReadOnly = true;
+            this.bpTxtTBarY.Size = new System.Drawing.Size(37, 20);
+            this.bpTxtTBarY.TabIndex = 12;
+            this.bpTxtTBarY.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            // 
+            // bpTxtTBarX
+            // 
+            this.bpTxtTBarX.Location = new System.Drawing.Point(120, 33);
+            this.bpTxtTBarX.Name = "bpTxtTBarX";
+            this.bpTxtTBarX.ReadOnly = true;
+            this.bpTxtTBarX.Size = new System.Drawing.Size(37, 20);
+            this.bpTxtTBarX.TabIndex = 11;
+            this.bpTxtTBarX.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
             // label4
             // 
@@ -273,19 +306,21 @@ namespace ProjektNr1Paczesny72541
             this.bpNumUpDownLineThicknes.Maximum = new decimal(new int[] { 10, 0, 0, 0 });
             this.bpNumUpDownLineThicknes.Minimum = new decimal(new int[] { 1, 0, 0, 0 });
             this.bpNumUpDownLineThicknes.Name = "bpNumUpDownLineThicknes";
-            this.bpNumUpDownLineThicknes.Size = new System.Drawing.Size(108, 20);
+            this.bpNumUpDownLineThicknes.Size = new System.Drawing.Size(151, 20);
             this.bpNumUpDownLineThicknes.TabIndex = 9;
             this.bpNumUpDownLineThicknes.Value = new decimal(new int[] { 1, 0, 0, 0 });
+            this.bpNumUpDownLineThicknes.ValueChanged += new System.EventHandler(this.bpNumUpDownLineThicknes_ValueChanged);
             // 
             // bpCBoxLineStyle
             // 
             this.bpCBoxLineStyle.FormattingEnabled = true;
-            this.bpCBoxLineStyle.Items.AddRange(new object[] { "Krokowy (Dash)", "KreskowoKropkowy (DashDot)", "KreskowoKropkowoKropkowy (DashDotDot)", "Kropkowy (Dot)", "Ciągły (Solid)" });
+            this.bpCBoxLineStyle.Items.AddRange(new object[] { "Ciągły (Solid)", "Kropkowy (Dot)", "Krokowy (Dash)", "KreskowoKropkowy (DashDot)", "KreskowoKropkowoKropkowy (DashDotDot)" });
             this.bpCBoxLineStyle.Location = new System.Drawing.Point(6, 144);
             this.bpCBoxLineStyle.Name = "bpCBoxLineStyle";
-            this.bpCBoxLineStyle.Size = new System.Drawing.Size(108, 21);
+            this.bpCBoxLineStyle.Size = new System.Drawing.Size(151, 21);
             this.bpCBoxLineStyle.TabIndex = 7;
             this.bpCBoxLineStyle.Text = "Zmien styl lini";
+            this.bpCBoxLineStyle.SelectedIndexChanged += new System.EventHandler(this.bpCBoxLineStyle_SelectedIndexChanged);
             // 
             // bpBtnColorPicker
             // 
@@ -295,6 +330,7 @@ namespace ProjektNr1Paczesny72541
             this.bpBtnColorPicker.TabIndex = 6;
             this.bpBtnColorPicker.Text = "Zmiana koloru";
             this.bpBtnColorPicker.UseVisualStyleBackColor = true;
+            this.bpBtnColorPicker.Click += new System.EventHandler(this.bpBtnColorPicker_Click);
             // 
             // bpTBarY
             // 
@@ -305,6 +341,7 @@ namespace ProjektNr1Paczesny72541
             this.bpTBarY.Size = new System.Drawing.Size(108, 45);
             this.bpTBarY.TabIndex = 5;
             this.bpTBarY.Value = 1;
+            this.bpTBarY.Scroll += new System.EventHandler(this.bpTBarY_Scroll);
             // 
             // label3
             // 
@@ -323,6 +360,7 @@ namespace ProjektNr1Paczesny72541
             this.bpTBarX.Size = new System.Drawing.Size(108, 45);
             this.bpTBarX.TabIndex = 3;
             this.bpTBarX.Value = 1;
+            this.bpTBarX.Scroll += new System.EventHandler(this.bpTBarX_Scroll);
             // 
             // label2
             // 
@@ -340,7 +378,7 @@ namespace ProjektNr1Paczesny72541
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(800, 553);
+            this.ClientSize = new System.Drawing.Size(838, 553);
             this.Controls.Add(this.bpGrBoxAttrChange);
             this.Controls.Add(this.bpBtnTurnOfSlider);
             this.Controls.Add(this.bpGrBoxNavigation);
@@ -368,6 +406,11 @@ namespace ProjektNr1Paczesny72541
             this.ResumeLayout(false);
             this.PerformLayout();
         }
+
+        private System.Windows.Forms.TextBox bpTxtColorPicker;
+
+        private System.Windows.Forms.TextBox bpTxtTBarX;
+        private System.Windows.Forms.TextBox bpTxtTBarY;
 
         private System.Windows.Forms.Timer bpTimer;
 

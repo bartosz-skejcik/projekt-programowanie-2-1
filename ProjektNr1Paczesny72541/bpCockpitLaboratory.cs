@@ -229,6 +229,8 @@ namespace ProjektNr1Paczesny72541
             
             bpShapesList.Enabled = true;
             bpBtnMoveShape.Enabled = true;
+            bpBtnSetRandomAttributes.Enabled = true;
+            bpBtnTurnOnSlider.Enabled = true;
             
             bpBtnStart.Enabled = false;
 
@@ -339,7 +341,15 @@ namespace ProjektNr1Paczesny72541
                 bpTBarY.Value = YMax / 2;
 
                 // set background color of the color picker to the color of the first shape
-                bpBtnColorPicker.BackColor = bpTFG[0].Color;
+                // bpBtnColorPicker.BackColor = bpTFG[0].Color;
+                bpTxtColorPicker.BackColor = bpTFG[0].Color;
+
+                // set the x and y coordinates of the shape to the tbars
+                bpTBarX.Value = bpTFG[0].X;
+                bpTBarY.Value = bpTFG[0].Y;
+                
+                bpTxtTBarX.Text = bpTBarX.Value.ToString();
+                bpTxtTBarY.Text = bpTBarY.Value.ToString();
 
                 bpCBoxLineStyle.SelectedItem = bpTFG[0].DashStyle;
                 
@@ -385,7 +395,7 @@ namespace ProjektNr1Paczesny72541
             
             bpTFG[bpShapeIndex].Erase(drawingBoard, bpPictureBox);
 
-            if (bpShapeIndex < IndexTFG)
+            if (bpShapeIndex < IndexTFG - 1)
             {
                 bpShapeIndex++;
             }
@@ -399,13 +409,20 @@ namespace ProjektNr1Paczesny72541
             
             // set values for tools responsible for changing the attributes of shapes
             bpTBarX.Maximum = XMax;
-            bpTBarX.Value = XMax / 2;
+            bpTBarX.Value = int.Parse((XMax / 2).ToString());
             
             bpTBarY.Maximum = YMax;
-            bpTBarY.Value = YMax / 2;
+            bpTBarY.Value = int.Parse((YMax / 2).ToString());
 
             // set background color of the color picker to the color of the first shape
-            bpBtnColorPicker.BackColor = bpTFG[bpShapeIndex].Color;
+            bpTxtColorPicker.BackColor = bpTFG[bpShapeIndex].Color;
+            
+            // set the x and y coordinates of the shape to the tbars
+            bpTBarX.Value = bpTFG[bpShapeIndex].X;
+            bpTBarY.Value = bpTFG[bpShapeIndex].Y;
+            
+            bpTxtTBarX.Text = bpTBarX.Value.ToString();
+            bpTxtTBarY.Text = bpTBarY.Value.ToString();
 
             bpCBoxLineStyle.SelectedItem = bpTFG[bpShapeIndex].DashStyle;
             
@@ -415,6 +432,150 @@ namespace ProjektNr1Paczesny72541
             bpTFG[bpShapeIndex].Move(drawingBoard, bpPictureBox, XMax/2, YMax/2);
             
             bpTxtIndexTVG.Text = bpShapeIndex.ToString();
+            
+            bpPictureBox.Refresh();
+        }
+
+        private void bpTBarX_Scroll(object sender, EventArgs e)
+        {
+            // clear the error provider
+            
+            // get the index value of the shape that is currently being displayed
+            ValidationResult<int> result = Helpers.ValidateInt(bpTxtIndexTVG.Text);
+            if (!result.Success)
+            {
+                MessageBox.Show(result.Message);
+                bpTxtIndexTVG.Text = "";
+            }
+            
+            int bpShapeIndex = result.ParsedValue;
+            
+            bpTFG[bpShapeIndex].Erase(drawingBoard, bpPictureBox);
+            
+            bpPictureBox.Refresh();
+            
+            bpTFG[bpShapeIndex].Move(drawingBoard, bpPictureBox, bpTBarX.Value, bpTFG[bpShapeIndex].Y);
+            // update the text box with the current value of the slider
+            bpTxtTBarX.Text = bpTBarX.Value.ToString();
+        }
+
+        private void bpTBarY_Scroll(object sender, EventArgs e)
+        {
+            // clear the error provider
+            
+            // get the index value of the shape that is currently being displayed
+            ValidationResult<int> result = Helpers.ValidateInt(bpTxtIndexTVG.Text);
+            if (!result.Success)
+            {
+                MessageBox.Show(result.Message);
+                bpTxtIndexTVG.Text = "";
+            }
+            
+            int bpShapeIndex = result.ParsedValue;
+            
+            bpTFG[bpShapeIndex].Erase(drawingBoard, bpPictureBox);
+            
+            bpPictureBox.Refresh();
+            
+            bpTFG[bpShapeIndex].Move(drawingBoard, bpPictureBox, bpTFG[bpShapeIndex].X, bpTBarY.Value);
+            // update the text box with the current value of the slider
+            bpTxtTBarY.Text = bpTBarY.Value.ToString();
+        }
+
+        private void bpBtnColorPicker_Click(object sender, EventArgs e)
+        {
+            // show a modal dialog to select a color
+            ColorDialog colorDialog = new ColorDialog();
+            colorDialog.Color = bpTxtColorPicker.BackColor;
+            colorDialog.AllowFullOpen = true;
+            colorDialog.ShowHelp = true;
+            DialogResult dialogResult = colorDialog.ShowDialog();
+
+            if (dialogResult == DialogResult.Cancel)
+            {
+                return;
+            }
+            
+            // set the selected color as the background color of the button
+            bpTxtColorPicker.BackColor = colorDialog.Color;
+            // set the selected color as the color of the shape
+            // bpTFG[bpShapeIndex].Color = colorDialog.Color;
+            // get the index value of the shape that is currently being displayed
+            ValidationResult<int> result = Helpers.ValidateInt(bpTxtIndexTVG.Text);
+            if (!result.Success)
+            {
+                MessageBox.Show(result.Message);
+                bpTxtIndexTVG.Text = "";
+            }
+            
+            int bpShapeIndex = result.ParsedValue;
+            // erase the shape
+            bpTFG[bpShapeIndex].Erase(drawingBoard, bpPictureBox);
+            
+            bpPictureBox.Refresh();
+            
+            // set the color of the shape
+            bpTFG[bpShapeIndex].SetAttributes(bpTxtColorPicker.BackColor, bpTFG[bpShapeIndex].DashStyle, bpTFG[bpShapeIndex].LineWidth);
+            // draw the shape
+            bpTFG[bpShapeIndex].Draw(drawingBoard);
+            
+            bpPictureBox.Refresh();
+            
+        }
+
+        private void bpCBoxLineStyle_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            // get the index value of the shape that is currently being displayed
+            ValidationResult<int> result = Helpers.ValidateInt(bpTxtIndexTVG.Text);
+            if (!result.Success)
+            {
+                MessageBox.Show(result.Message);
+                bpTxtIndexTVG.Text = "";
+            }
+            
+            int bpShapeIndex = result.ParsedValue;
+            
+            // erase the shape
+            bpTFG[bpShapeIndex].Erase(drawingBoard, bpPictureBox);
+            
+            bpPictureBox.Refresh();
+            
+            // set the line style of the shape
+            if (bpCBoxLineStyle.SelectedItem != null)
+            {
+                DashStyle selectedDashStyle = (DashStyle)bpCBoxLineStyle.SelectedIndex;
+                bpTFG[bpShapeIndex].SetAttributes(bpTFG[bpShapeIndex].Color, selectedDashStyle, bpTFG[bpShapeIndex].LineWidth);
+            }
+            
+            // draw the shape
+            bpTFG[bpShapeIndex].Draw(drawingBoard);
+            
+            bpPictureBox.Refresh();
+        }
+
+        private void bpNumUpDownLineThicknes_ValueChanged(object sender, EventArgs e)
+        {
+            // get the index value of the shape that is currently being displayed
+            ValidationResult<int> result = Helpers.ValidateInt(bpTxtIndexTVG.Text);
+            if (!result.Success)
+            {
+                MessageBox.Show(result.Message);
+                bpTxtIndexTVG.Text = "";
+            }
+            
+            int bpShapeIndex = result.ParsedValue;
+            
+            // erase the shape
+            bpTFG[bpShapeIndex].Erase(drawingBoard, bpPictureBox);
+            
+            bpPictureBox.Refresh();
+            
+            // set the line thickness of the shape
+            float selectedLineWidth = (float)bpNumUpDownLineThicknes.Value;
+            bpTFG[bpShapeIndex].SetAttributes(bpTFG[bpShapeIndex].Color, bpTFG[bpShapeIndex].DashStyle, selectedLineWidth);
+            
+            // draw the shape
+            bpTFG[bpShapeIndex].Draw(drawingBoard);
             
             bpPictureBox.Refresh();
         }
