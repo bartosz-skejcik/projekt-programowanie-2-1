@@ -208,6 +208,7 @@ namespace ProjektNr1Paczesny72541
             this.bpBtnPrevious.TabIndex = 3;
             this.bpBtnPrevious.Text = "Poprzedni";
             this.bpBtnPrevious.UseVisualStyleBackColor = true;
+            this.bpBtnPrevious.Click += new System.EventHandler(this.bpBtnPrevious_Click);
             // 
             // bpTxtIndexTVG
             // 

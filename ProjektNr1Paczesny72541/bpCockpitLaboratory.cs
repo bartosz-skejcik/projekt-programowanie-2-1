@@ -133,6 +133,13 @@ namespace ProjektNr1Paczesny72541
             CheckedListBox.CheckedItemCollection selectedShapes = bpShapesList.CheckedItems;
             bpShapesList.Enabled = false;
 
+            if (selectedShapes.Count == 0)
+            {
+                MessageBox.Show("Proszę wybrać przynajmniej jedną figurę.", "Informacja", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                bpShapesList.Enabled = true;
+                return;
+            }
+
             int currentShapeIndex;
             string currentShape;
             
@@ -156,60 +163,40 @@ namespace ProjektNr1Paczesny72541
                 currentShapeIndex = rnd.Next(selectedShapes.Count);
                 currentShape = selectedShapes[currentShapeIndex].ToString();
 
+                // Generate a random color different from the background
+                do
+                {
+                    color = Color.FromArgb(rnd.Next(256), rnd.Next(256), rnd.Next(256));
+                } while (color == Color.Beige);
+                
+                dashStyle = (DashStyle)rnd.Next(5);
+                lineWidth = rnd.Next(1, 5);
+
                 switch (currentShape)
                 {
                     case "Punkt":
-                        bpTFG[IndexTFG] = new GeometricShapes.Point(Xp, Yp);
+                        bpTFG[IndexTFG] = new GeometricShapes.Point(Xp, Yp, color);
+                        bpTFG[IndexTFG].SetAttributes(color, dashStyle, lineWidth);
                         IndexTFG++;
                         break;
                     case "Linia":
                         Xk = rnd.Next(FormMargin, XMax - FormMargin);
                         Yk = rnd.Next(FormMargin, YMax - FormMargin);
-                        bpTFG[IndexTFG] = new Line(Xp, Yp, Xk, Yk);
-                        
+                        bpTFG[IndexTFG] = new Line(Xp, Yp, Xk, Yk, color);
+                        bpTFG[IndexTFG].SetAttributes(color, dashStyle, lineWidth);
                         IndexTFG++;
                         break;
                     case "Okrąg":
-                        circleRadius = rnd.Next(1, 100);
-                        do
-                        {
-                            color = Color.FromArgb(rnd.Next(256), rnd.Next(256), rnd.Next(256));
-                        } while (color == Color.Beige);
-                        dashStyle = (DashStyle)rnd.Next(5);
-                        lineWidth = (int)(rnd.NextDouble() * 10);
+                        circleRadius = rnd.Next(10, 50);
                         bpTFG[IndexTFG] = new Circle(Xp, Yp, circleRadius, color, dashStyle, lineWidth);
-                        
                         IndexTFG++;
                         break;
                     case "Elipsa":
-                        bigAxis = rnd.Next(1, 100);
-                        smallAxis = rnd.Next(1, 100);
-                        do
-                        {
-                            color = Color.FromArgb(rnd.Next(256), rnd.Next(256), rnd.Next(256));
-                        } while (color == Color.Beige);
-                        dashStyle = (DashStyle)rnd.Next(5);
-                        lineWidth = (int)(rnd.NextDouble() * 10);
+                        bigAxis = rnd.Next(20, 100);
+                        smallAxis = rnd.Next(10, 50);
                         bpTFG[IndexTFG] = new Elipse(Xp, Yp, bigAxis, smallAxis, color, dashStyle, lineWidth);
-                        
                         IndexTFG++;
                         break;
-                    // case "Prostokąt":
-                    //     width = rnd.Next(1, 100);
-                    //     height = rnd.Next(1, 100);
-                    //     bpTFG[IndexTFG] = new Rectangle(Xp, Yp, width, height);
-                    //     IndexTFG++;
-                    //     break;
-                    // case "Kwadrat":
-                    //     SquareSide = rnd.Next(1, 100);
-                    //     bpTFG[IndexTFG] = new Square(Xp, Yp, SquareSide);
-                    //     IndexTFG++;
-                    //     break;
-                    // case "Wielokąt":
-                    //     polygonDegree = rnd.Next(3, 10);
-                    //     bpTFG[IndexTFG] = new Polygon(Xp, Yp, polygonDegree);
-                    //     IndexTFG++;
-                    //     break;
                     default:
                         MessageBox.Show("Wylosowana została figura o nazwie: " + currentShape + " ale jest ona w trakcie realizacji", "Informacja", MessageBoxButtons.OK, MessageBoxIcon.Information);
                         break;
@@ -217,6 +204,7 @@ namespace ProjektNr1Paczesny72541
                 
             } // for loop end
             
+            // Draw all the shapes
             for (int i = 0; i < IndexTFG; i++)
             {
                 if (bpTFG[i] != null)
@@ -228,9 +216,9 @@ namespace ProjektNr1Paczesny72541
             bpPictureBox.Refresh();
             
             bpShapesList.Enabled = true;
-            bpBtnMoveShape.Enabled = true;
-            bpBtnSetRandomAttributes.Enabled = true;
-            bpBtnTurnOnSlider.Enabled = true;
+            bpBtnMoveShape.Enabled = IndexTFG > 0;
+            bpBtnSetRandomAttributes.Enabled = IndexTFG > 0;
+            bpBtnTurnOnSlider.Enabled = IndexTFG > 0;
             
             bpBtnStart.Enabled = false;
 
@@ -307,7 +295,11 @@ namespace ProjektNr1Paczesny72541
 
         private void bpBtnTurnOnSlider_Click(object sender, EventArgs e)
         {
-            // turn off the error provider
+            if (IndexTFG == 0 || bpTFG == null)
+            {
+                MessageBox.Show("Brak figur do wyświetlenia.", "Informacja", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                return;
+            }
             
             drawingBoard.Clear(bpPictureBox.BackColor);
 
@@ -318,12 +310,12 @@ namespace ProjektNr1Paczesny72541
             bpTimer.Tag = 0;
             bpTxtIndexTVG.Text = "0";
             
+            // Center and draw the first shape
             bpTFG[0].Move(drawingBoard, bpPictureBox, XMax / 2, YMax / 2);
             
             bpPictureBox.Refresh();
             
             // rozpoznanie wybranego trybu prezentacji figur
-
             if (bpRdBtnInterval.Checked)
             {
                 bpTimer.Enabled = true;
@@ -341,19 +333,23 @@ namespace ProjektNr1Paczesny72541
                 bpTBarY.Value = YMax / 2;
 
                 // set background color of the color picker to the color of the first shape
-                // bpBtnColorPicker.BackColor = bpTFG[0].Color;
                 bpTxtColorPicker.BackColor = bpTFG[0].Color;
 
-                // set the x and y coordinates of the shape to the tbars
+                // Update sliders to match current position
                 bpTBarX.Value = bpTFG[0].X;
                 bpTBarY.Value = bpTFG[0].Y;
                 
                 bpTxtTBarX.Text = bpTBarX.Value.ToString();
                 bpTxtTBarY.Text = bpTBarY.Value.ToString();
 
-                bpCBoxLineStyle.SelectedItem = bpTFG[0].DashStyle;
+                // Set the line style dropdown to match the current shape
+                bpCBoxLineStyle.SelectedIndex = (int)bpTFG[0].DashStyle;
                 
-                bpNumUpDownLineThicknes.Value = (decimal)bpTFG[0].LineWidth;
+                // Set the line thickness control
+                decimal lineWidth = (decimal)bpTFG[0].LineWidth;
+                if (lineWidth < bpNumUpDownLineThicknes.Minimum)
+                    lineWidth = bpNumUpDownLineThicknes.Minimum;
+                bpNumUpDownLineThicknes.Value = lineWidth;
             }
             
             // deactivate the button
@@ -364,37 +360,50 @@ namespace ProjektNr1Paczesny72541
 
         private void bpTimer_Tick(object sender, EventArgs e)
         {
+            if (IndexTFG == 0 || bpTFG == null) return;
+            
             drawingBoard.Clear(bpPictureBox.BackColor);
 
             int XMax = bpPictureBox.Width;
             int YMax = bpPictureBox.Height;
             
+            int currentIndex = (int)bpTimer.Tag;
+            if (currentIndex >= IndexTFG) currentIndex = 0;
+            
             // presenting the next geometric shape in the central part of the bpPictureBox
-            bpTFG[(int)bpTimer.Tag].Move(drawingBoard, bpPictureBox, XMax/2, YMax/2);
+            bpTFG[currentIndex].Move(drawingBoard, bpPictureBox, XMax/2, YMax/2);
             
             bpPictureBox.Refresh();
             
             // wyznaczenie indeksu nastepnej figury do prezentacji
-
-            bpTimer.Tag = ((int)bpTimer.Tag + 1) % IndexTFG;
+            bpTimer.Tag = (currentIndex + 1) % IndexTFG;
             bpTxtIndexTVG.Text = bpTimer.Tag.ToString();
         }
 
         private void bpBtnNext_Click(object sender, EventArgs e)
         {
+            if (IndexTFG == 0 || bpTFG == null)
+            {
+                MessageBox.Show("Brak figur do wyświetlenia.", "Informacja", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                return;
+            }
+            
             // validate the index
             ValidationResult<int> result = Helpers.ValidateInt(bpTxtIndexTVG.Text);
 
             if (!result.Success)
             {
                 MessageBox.Show(result.Message);
-                bpTxtIndexTVG.Text = "";
+                bpTxtIndexTVG.Text = "0";
+                return;
             }
 
             int bpShapeIndex = result.ParsedValue;
-            
-            bpTFG[bpShapeIndex].Erase(drawingBoard, bpPictureBox);
 
+            // Clear the entire drawing board
+            drawingBoard.Clear(bpPictureBox.BackColor);
+
+            // Calculate the next index
             if (bpShapeIndex < IndexTFG - 1)
             {
                 bpShapeIndex++;
@@ -404,82 +413,89 @@ namespace ProjektNr1Paczesny72541
                 bpShapeIndex = 0;
             }
 
+            // Check for valid index
+            if (bpShapeIndex >= IndexTFG || bpShapeIndex < 0)
+            {
+                bpShapeIndex = 0;
+            }
+
+            if (bpTFG[bpShapeIndex] == null)
+            {
+                MessageBox.Show("Brak figury dla indeksu " + bpShapeIndex, "Błąd", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
             int XMax = bpPictureBox.Width;
             int YMax = bpPictureBox.Height;
-            
-            // set values for tools responsible for changing the attributes of shapes
-            bpTBarX.Maximum = XMax;
-            bpTBarX.Value = int.Parse((XMax / 2).ToString());
-            
-            bpTBarY.Maximum = YMax;
-            bpTBarY.Value = int.Parse((YMax / 2).ToString());
 
-            // set background color of the color picker to the color of the first shape
-            bpTxtColorPicker.BackColor = bpTFG[bpShapeIndex].Color;
-            
-            // set the x and y coordinates of the shape to the tbars
+            // Center the shape
+            bpTFG[bpShapeIndex].Move(drawingBoard, bpPictureBox, XMax/2, YMax/2);
+
+            // Update UI controls
+            bpTBarX.Maximum = XMax;
             bpTBarX.Value = bpTFG[bpShapeIndex].X;
+            bpTBarY.Maximum = YMax;
             bpTBarY.Value = bpTFG[bpShapeIndex].Y;
-            
+            bpTxtColorPicker.BackColor = bpTFG[bpShapeIndex].Color;
             bpTxtTBarX.Text = bpTBarX.Value.ToString();
             bpTxtTBarY.Text = bpTBarY.Value.ToString();
+            bpCBoxLineStyle.SelectedIndex = (int)bpTFG[bpShapeIndex].DashStyle;
+    
+            // Check if LineWidth is less than the minimum allowed value
+            decimal lineWidth = (decimal)bpTFG[bpShapeIndex].LineWidth;
+            if (lineWidth < bpNumUpDownLineThicknes.Minimum)
+                lineWidth = bpNumUpDownLineThicknes.Minimum;
+    
+            bpNumUpDownLineThicknes.Value = lineWidth;
 
-            bpCBoxLineStyle.SelectedItem = bpTFG[bpShapeIndex].DashStyle;
-            
-            bpNumUpDownLineThicknes.Value = (decimal)bpTFG[bpShapeIndex].LineWidth;
-            
-            // presenting the next geometric shape in the central part of the bpPictureBox
-            bpTFG[bpShapeIndex].Move(drawingBoard, bpPictureBox, XMax/2, YMax/2);
-            
             bpTxtIndexTVG.Text = bpShapeIndex.ToString();
-            
             bpPictureBox.Refresh();
         }
 
         private void bpTBarX_Scroll(object sender, EventArgs e)
         {
-            // clear the error provider
-            
             // get the index value of the shape that is currently being displayed
             ValidationResult<int> result = Helpers.ValidateInt(bpTxtIndexTVG.Text);
             if (!result.Success)
             {
                 MessageBox.Show(result.Message);
                 bpTxtIndexTVG.Text = "";
+                return;
             }
             
             int bpShapeIndex = result.ParsedValue;
             
-            bpTFG[bpShapeIndex].Erase(drawingBoard, bpPictureBox);
-            
-            bpPictureBox.Refresh();
-            
+            // Move the shape directly - the Move method already handles erasing and redrawing
             bpTFG[bpShapeIndex].Move(drawingBoard, bpPictureBox, bpTBarX.Value, bpTFG[bpShapeIndex].Y);
+            
             // update the text box with the current value of the slider
             bpTxtTBarX.Text = bpTBarX.Value.ToString();
+            
+            // Refresh the picture box to show the updated shape
+            bpPictureBox.Refresh();
         }
 
         private void bpTBarY_Scroll(object sender, EventArgs e)
         {
-            // clear the error provider
-            
             // get the index value of the shape that is currently being displayed
             ValidationResult<int> result = Helpers.ValidateInt(bpTxtIndexTVG.Text);
             if (!result.Success)
             {
                 MessageBox.Show(result.Message);
                 bpTxtIndexTVG.Text = "";
+                return;
             }
             
             int bpShapeIndex = result.ParsedValue;
             
-            bpTFG[bpShapeIndex].Erase(drawingBoard, bpPictureBox);
-            
-            bpPictureBox.Refresh();
-            
+            // Move the shape directly - the Move method already handles erasing and redrawing
             bpTFG[bpShapeIndex].Move(drawingBoard, bpPictureBox, bpTFG[bpShapeIndex].X, bpTBarY.Value);
+            
             // update the text box with the current value of the slider
             bpTxtTBarY.Text = bpTBarY.Value.ToString();
+            
+            // Refresh the picture box to show the updated shape
+            bpPictureBox.Refresh();
         }
 
         private void bpBtnColorPicker_Click(object sender, EventArgs e)
@@ -561,6 +577,7 @@ namespace ProjektNr1Paczesny72541
             {
                 MessageBox.Show(result.Message);
                 bpTxtIndexTVG.Text = "";
+                return;
             }
             
             int bpShapeIndex = result.ParsedValue;
@@ -577,6 +594,77 @@ namespace ProjektNr1Paczesny72541
             // draw the shape
             bpTFG[bpShapeIndex].Draw(drawingBoard);
             
+            bpPictureBox.Refresh();
+        }
+
+        private void bpBtnPrevious_Click(object sender, EventArgs e)
+        {
+            if (IndexTFG == 0 || bpTFG == null)
+            {
+                MessageBox.Show("Brak figur do wyświetlenia.", "Informacja", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                return;
+            }
+            
+            // get the index value of the shape that is currently being displayed
+            ValidationResult<int> result = Helpers.ValidateInt(bpTxtIndexTVG.Text);
+            if (!result.Success)
+            {
+                MessageBox.Show(result.Message);
+                bpTxtIndexTVG.Text = "0";
+                return;
+            }
+
+            int bpShapeIndex = result.ParsedValue;
+
+            // Clear the entire drawing board
+            drawingBoard.Clear(bpPictureBox.BackColor);
+
+            // Calculate the previous index
+            if (bpShapeIndex > 0)
+            {
+                bpShapeIndex--;
+            }
+            else
+            {
+                bpShapeIndex = IndexTFG - 1;
+            }
+
+            // Check for valid index
+            if (bpShapeIndex >= IndexTFG || bpShapeIndex < 0)
+            {
+                bpShapeIndex = 0;
+            }
+
+            if (bpTFG[bpShapeIndex] == null)
+            {
+                MessageBox.Show("Brak figury dla indeksu " + bpShapeIndex, "Błąd", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
+            int XMax = bpPictureBox.Width;
+            int YMax = bpPictureBox.Height;
+
+            // Center the shape
+            bpTFG[bpShapeIndex].Move(drawingBoard, bpPictureBox, XMax/2, YMax/2);
+
+            // Update UI controls
+            bpTBarX.Maximum = XMax;
+            bpTBarX.Value = bpTFG[bpShapeIndex].X;
+            bpTBarY.Maximum = YMax;
+            bpTBarY.Value = bpTFG[bpShapeIndex].Y;
+            bpTxtColorPicker.BackColor = bpTFG[bpShapeIndex].Color;
+            bpTxtTBarX.Text = bpTBarX.Value.ToString();
+            bpTxtTBarY.Text = bpTBarY.Value.ToString();
+            bpCBoxLineStyle.SelectedIndex = (int)bpTFG[bpShapeIndex].DashStyle;
+    
+            // Check if LineWidth is less than the minimum allowed value
+            decimal lineWidth = (decimal)bpTFG[bpShapeIndex].LineWidth;
+            if (lineWidth < bpNumUpDownLineThicknes.Minimum)
+                lineWidth = bpNumUpDownLineThicknes.Minimum;
+    
+            bpNumUpDownLineThicknes.Value = lineWidth;
+
+            bpTxtIndexTVG.Text = bpShapeIndex.ToString();
             bpPictureBox.Refresh();
         }
     }

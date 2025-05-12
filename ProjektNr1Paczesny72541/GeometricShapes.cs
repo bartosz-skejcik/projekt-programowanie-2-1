@@ -23,7 +23,7 @@ namespace ProjektNr1Paczesny72541
             {
                 X = x;
                 Y = y;
-                Radius = 1;
+                Radius = 5; // Increased from 1 to make points more visible
                 Color = Color.Red;
                 Visible = false;
                 DashStyle = DashStyle.Dash;
@@ -37,15 +37,9 @@ namespace ProjektNr1Paczesny72541
 
             public virtual void Draw(Graphics g)
             {
-                if (Visible)
-                {
-                    Console.WriteLine("Point is already visible, cannot draw again.");
-                    return;
-                }
-                
                 using (SolidBrush brush = new SolidBrush(Color))
                 {
-                    g.FillEllipse(brush, X - Radius, Y - Radius, Radius, Radius);
+                    g.FillEllipse(brush, X - Radius, Y - Radius, Radius * 2, Radius * 2);
                 }
                 
                 Visible = true;
@@ -53,15 +47,9 @@ namespace ProjektNr1Paczesny72541
             
             public virtual void Erase(Graphics g, Control c)
             {
-                if (!Visible)
-                {
-                    Console.WriteLine("Point is not visible, cannot erase.");
-                    return;
-                }
-                
                 using (SolidBrush brush = new SolidBrush(c.BackColor))
                 {
-                    g.FillEllipse(brush, X - Radius, Y - Radius, Radius, Radius);
+                    g.FillEllipse(brush, X - Radius, Y - Radius, Radius * 2, Radius * 2);
                 }
                 
                 Visible = false;
@@ -69,7 +57,10 @@ namespace ProjektNr1Paczesny72541
 
             public virtual void Move(Graphics g, Control c, int x, int y)
             {
-                Erase(g, c);
+                if (Visible)
+                {
+                    Erase(g, c);
+                }
 
                 X = x;
                 Y = y;
@@ -80,7 +71,6 @@ namespace ProjektNr1Paczesny72541
             // declaring public methods (accessible for other classes)
             public void SetAttributes(Color lineColor, DashStyle dashStyle, float lineWidth) 
             {
-                Console.WriteLine( $"Setting attributes: Color: {lineColor}, DashStyle: {dashStyle}, LineWidth: {lineWidth}" );
                 Color = lineColor;
                 DashStyle = dashStyle;
                 LineWidth = lineWidth;
@@ -105,12 +95,6 @@ namespace ProjektNr1Paczesny72541
 
             public override void Draw(Graphics g)
             {
-                if (Visible)
-                {
-                    Console.WriteLine("Line is already visible, cannot draw again.");
-                    return;
-                }
-                
                 using (Pen pen = new Pen(Color, LineWidth) { DashStyle = DashStyle })
                 {
                     g.DrawLine(pen, X, Y, Xk, Yk);
@@ -121,15 +105,9 @@ namespace ProjektNr1Paczesny72541
             
             public override void Erase(Graphics g, Control c)
             {
-                if (!Visible)
+                using (Pen pen = new Pen(c.BackColor, LineWidth + 1))
                 {
-                    Console.WriteLine("Line is not visible, cannot erase.");
-                    return;
-                }
-                
-                using (SolidBrush brush = new SolidBrush(c.BackColor))
-                {
-                    g.DrawLine(new Pen(brush, LineWidth) { DashStyle = DashStyle }, X, Y, Xk, Yk);
+                    g.DrawLine(pen, X, Y, Xk, Yk);
                 }
                 
                 Visible = false;
@@ -137,10 +115,19 @@ namespace ProjektNr1Paczesny72541
 
             public override void Move(Graphics g, Control c, int x, int y)
             {
-                Erase(g, c);
+                if (Visible)
+                {
+                    Erase(g, c);
+                }
 
-                Xk = x;
-                Yk = y;
+                // Calculate the displacement and move both points
+                int dx = x - X;
+                int dy = y - Y;
+                
+                X = x;
+                Y = y;
+                Xk += dx;
+                Yk += dy;
                 
                 Draw(g);
             }
@@ -165,12 +152,6 @@ namespace ProjektNr1Paczesny72541
 
             public override void Draw(Graphics g)
             {
-                if (Visible)
-                {
-                    Console.WriteLine("Elipse is already visible, cannot draw again.");
-                    return;
-                }
-                
                 using (Pen pen = new Pen(Color, LineWidth) { DashStyle = DashStyle })
                 {
                     g.DrawEllipse(pen, X - BigAxis / 2, Y - SmallAxis / 2, BigAxis, SmallAxis);
@@ -181,15 +162,9 @@ namespace ProjektNr1Paczesny72541
 
             public override void Erase(Graphics g, Control c)
             {
-                if (!Visible)
+                using (Pen pen = new Pen(c.BackColor, LineWidth + 1))
                 {
-                    Console.WriteLine("Elipse is not visible, cannot erase.");
-                    return;
-                }
-                
-                using (SolidBrush brush = new SolidBrush(c.BackColor))
-                {
-                    g.FillEllipse(brush, X - BigAxis / 2, Y - SmallAxis / 2, BigAxis, SmallAxis);
+                    g.DrawEllipse(pen, X - BigAxis / 2, Y - SmallAxis / 2, BigAxis, SmallAxis);
                 }
                 
                 Visible = false;
@@ -198,26 +173,23 @@ namespace ProjektNr1Paczesny72541
 
         public class Circle : Elipse
         {
-            protected int Radius;
+            protected int CircleRadius;
             
-            public Circle(int x, int y, int radius) : base(x, y, radius, radius)
+            public Circle(int x, int y, int radius) : base(x, y, radius * 2, radius * 2)
             {
-                Radius = radius;
+                CircleRadius = radius;
             }
             
-            public Circle(int x, int y, int radius, Color lineColor, DashStyle lineStyle, int lineWidth) : base(x, y, radius, radius, lineColor, lineStyle, lineWidth) { }
+            public Circle(int x, int y, int radius, Color lineColor, DashStyle lineStyle, int lineWidth) : base(x, y, radius * 2, radius * 2, lineColor, lineStyle, lineWidth) 
+            {
+                CircleRadius = radius;
+            }
             
             public override void Draw(Graphics g)
             {
-                if (Visible)
-                {
-                    Console.WriteLine("Circle is already visible, cannot draw again.");
-                    return;
-                }
-                
                 using (Pen pen = new Pen(Color, LineWidth) { DashStyle = DashStyle })
                 {
-                    g.DrawEllipse(pen, X - Radius, Y - Radius, Radius * 2, Radius * 2);
+                    g.DrawEllipse(pen, X - CircleRadius, Y - CircleRadius, CircleRadius * 2, CircleRadius * 2);
                 }
                 
                 Visible = true;
@@ -225,15 +197,9 @@ namespace ProjektNr1Paczesny72541
             
             public override void Erase(Graphics g, Control c)
             {
-                if (!Visible)
+                using (Pen pen = new Pen(c.BackColor, LineWidth + 1))
                 {
-                    Console.WriteLine("Circle is not visible, cannot erase.");
-                    return;
-                }
-                
-                using (SolidBrush brush = new SolidBrush(c.BackColor))
-                {
-                    g.FillEllipse(brush, X - Radius, Y - Radius, Radius * 2, Radius * 2);
+                    g.DrawEllipse(pen, X - CircleRadius, Y - CircleRadius, CircleRadius * 2, CircleRadius * 2);
                 }
                 
                 Visible = false;
