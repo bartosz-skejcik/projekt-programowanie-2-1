@@ -6,6 +6,27 @@ using System.Windows.Forms; // Required for Control in Erase method if used
 
 namespace ProjektNr1Paczesny72541
 {
+    public enum ShapeType
+    {
+        None,
+        Line,
+        Rectangle,
+        SquareOutlined,
+        SquareFilled,
+        Ellipse,
+        Circle,
+        Bezier,
+        GluedBezier,
+        CardinalCurve,
+        ClosedCardinalCurve,
+        FilledClosedCardinalCurve,
+        FilledBorderedClosedCardinalCurve,
+        Arc,
+        Pie,
+        FilledPie,
+        FilledBorderedPie
+    }
+
     public abstract class Shape
     {
         public List<System.Drawing.Point> ControlPoints { get; protected set; }
@@ -16,6 +37,7 @@ namespace ProjektNr1Paczesny72541
         public bool Visible { get; set; }
         public bool IsFilled { get; protected set; }
         public bool IsBordered { get; protected set; }
+        public ShapeType ShapeType { get; protected set; }
 
         // Start and End points for simple two-point definition, common for many shapes
         public System.Drawing.Point StartPoint => ControlPoints.Count > 0 ? ControlPoints[0] : System.Drawing.Point.Empty;
@@ -32,6 +54,7 @@ namespace ProjektNr1Paczesny72541
             FillColor = Color.LightGray; // Default fill color
             IsFilled = false;
             IsBordered = true;
+            ShapeType = ShapeType.None;
         }
 
         public virtual void AddOrUpdateEndPoint(System.Drawing.Point point)
@@ -93,6 +116,7 @@ namespace ProjektNr1Paczesny72541
             AddOrUpdateEndPoint(end);
             IsFilled = false; // Lines cannot be filled
             IsBordered = true;
+            ShapeType = ShapeType.Line;
         }
 
         public override void Draw(Graphics g)
@@ -114,6 +138,7 @@ namespace ProjektNr1Paczesny72541
             FillColor = fillColor;
             IsFilled = isFilled;
             IsBordered = isBordered;
+            ShapeType = ShapeType.Rectangle;
         }
 
         public override void Draw(Graphics g)
@@ -149,6 +174,7 @@ namespace ProjektNr1Paczesny72541
             int side = Math.Min(rect.Width, rect.Height);
             System.Drawing.Point adjustedEnd = new System.Drawing.Point(StartPoint.X + (EndPoint.X > StartPoint.X ? side : -side), StartPoint.Y + (EndPoint.Y > StartPoint.Y ? side : -side));
             ControlPoints[1] = adjustedEnd;
+            ShapeType = isFilled ? ShapeType.SquareFilled : ShapeType.SquareOutlined;
         }
         // Draw method is inherited from RectangleShape
     }
@@ -163,6 +189,7 @@ namespace ProjektNr1Paczesny72541
             FillColor = fillColor;
             IsFilled = isFilled;
             IsBordered = isBordered;
+            ShapeType = ShapeType.Ellipse;
         }
 
         public override void Draw(Graphics g)
@@ -197,6 +224,7 @@ namespace ProjektNr1Paczesny72541
             int diameter = Math.Min(rect.Width, rect.Height);
             System.Drawing.Point adjustedEnd = new System.Drawing.Point(StartPoint.X + (EndPoint.X > StartPoint.X ? diameter : -diameter), StartPoint.Y + (EndPoint.Y > StartPoint.Y ? diameter : -diameter));
             ControlPoints[1] = adjustedEnd;
+            ShapeType = ShapeType.Circle;
         }
         // Draw method is inherited from EllipseShape
     }
@@ -215,6 +243,7 @@ namespace ProjektNr1Paczesny72541
             ControlPoints.Add(p2); // Index 2
             ControlPoints.Add(p3); // Index 3 (EndPoint effectively)
             IsFilled = false;
+            ShapeType = ShapeType.Bezier;
         }
 
         public override void Draw(Graphics g)
@@ -243,7 +272,8 @@ namespace ProjektNr1Paczesny72541
             IsFilled = isFilled;
             IsBordered = isBordered; // For DrawClosedCurve, border is implicit. For Fill, border can be added.
             FillColor = fillColor;
-            // Note: 'isClosed' is used to decide between DrawCurve and DrawClosedCurve
+            IsClosed = isClosed;
+            ShapeType = isClosed ? (isFilled ? (isBordered ? ShapeType.FilledBorderedClosedCardinalCurve : ShapeType.FilledClosedCardinalCurve) : ShapeType.ClosedCardinalCurve) : ShapeType.CardinalCurve;
         }
 
         public bool IsClosed { get; set; } // Specific to CardinalCurve
@@ -254,7 +284,7 @@ namespace ProjektNr1Paczesny72541
 
             System.Drawing.Point[] pointsArray = ControlPoints.ToArray();
 
-            if (IsFilled && IsClosed && ControlPoints.Count >=3)
+            if (IsFilled && IsClosed && ControlPoints.Count >= 3)
             {
                 using (SolidBrush brush = new SolidBrush(FillColor))
                 {
@@ -266,11 +296,11 @@ namespace ProjektNr1Paczesny72541
             {
                 using (Pen pen = new Pen(PenColor, LineWidth) { DashStyle = LineStyle })
                 {
-                    if (IsClosed && ControlPoints.Count >=3)
+                    if (IsClosed && ControlPoints.Count >= 3)
                     {
                         g.DrawClosedCurve(pen, pointsArray);
                     }
-                    else if (ControlPoints.Count >=2) // Open curve or line
+                    else if (ControlPoints.Count >= 2) // Open curve or line
                     {
                         g.DrawCurve(pen, pointsArray);
                     }
@@ -291,6 +321,7 @@ namespace ProjektNr1Paczesny72541
             StartAngle = startAngle;
             SweepAngle = sweepAngle;
             IsFilled = false; // Arcs are not filled
+            ShapeType = ShapeType.Arc;
         }
 
         public override void Draw(Graphics g)
@@ -320,6 +351,7 @@ namespace ProjektNr1Paczesny72541
             IsBordered = isBordered;
             StartAngle = startAngle;
             SweepAngle = sweepAngle;
+            ShapeType = isFilled ? (isBordered ? ShapeType.FilledBorderedPie : ShapeType.FilledPie) : ShapeType.Pie;
         }
 
         public override void Draw(Graphics g)
@@ -354,6 +386,7 @@ namespace ProjektNr1Paczesny72541
             this.ControlPoints = new List<Point>(points);
             this.previewOnly = previewOnly;
             this.Visible = !previewOnly;
+            ShapeType = ShapeType.GluedBezier;
         }
 
         public override void Draw(Graphics g)

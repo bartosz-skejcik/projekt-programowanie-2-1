@@ -82,8 +82,19 @@ namespace ProjektNr1Paczesny72541
             // Ustawienie TextBoxa indeksu na tylko do odczytu
             this.bpTxtIndexLFG.ReadOnly = true;
 
+            this.bpNumSquareSide.ValueChanged += new EventHandler(this.bpNumSquareSide_ValueChanged);
+            this.bpNumSquareX.ValueChanged += new EventHandler(this.bpNumSquareXY_ValueChanged);
+            this.bpNumSquareY.ValueChanged += new EventHandler(this.bpNumSquareXY_ValueChanged);
+
             this.Load += new System.EventHandler(this.bpCockpitIndividual_Load);
             this.Resize += new System.EventHandler(this.bpCockpitIndividual_Resize);
+
+            // Menu strip event handlers
+            this.drukujBitMapęRysownicyToolStripMenuItem.Click += new EventHandler(this.drukujBitMapęRysownicyToolStripMenuItem_Click);
+            this.zapiszBitMapęWPlikuToolStripMenuItem.Click += new EventHandler(this.zapiszBitMapęWPlikuToolStripMenuItem_Click);
+            this.odtwórzBitMapęRysownicyZPlikuToolStripMenuItem.Click += new EventHandler(this.odtwórzBitMapęRysownicyZPlikuToolStripMenuItem_Click);
+            this.exitZFormularzaToolStripMenuItem.Click += new EventHandler(this.exitZFormularzaToolStripMenuItem_Click);
+            this.restartProgramuToolStripMenuItem.Click += new EventHandler(this.restartProgramuToolStripMenuItem_Click);
         }
 
         private void bpPictureBox_MouseMove(object sender, MouseEventArgs e)
@@ -470,6 +481,25 @@ namespace ProjektNr1Paczesny72541
                 bpBtnNewGraphicalAttrs.Enabled = czySaFigury && bpIndexFigurySlajdera != -1;
                 bpBtnMoveToNewLocation.Enabled = czySaFigury && bpIndexFigurySlajdera != -1;
             }
+
+            // Pokaz/ukryj kontrolki do kwadratu w zależności od wybranej figury
+            bool isSquare = false;
+            if (bpIndexFigurySlajdera >= 0 && bpIndexFigurySlajdera < bpLFG.Count)
+            {
+                var fig = bpLFG[bpIndexFigurySlajdera];
+                isSquare = fig.ShapeType == ShapeType.SquareOutlined || fig.ShapeType == ShapeType.SquareFilled;
+            }
+
+            bpGrBoxGraphicalAttrs.Visible = bpGrBoxGraphicalAttrs.Visible = isSquare;
+
+            if (isSquare)
+            {
+                var square = (SquareShape)bpLFG[bpIndexFigurySlajdera];
+                int side = Math.Abs(square.EndPoint.X - square.StartPoint.X);
+                bpNumSquareSide.Value = side > 0 ? side : 1;
+                bpNumSquareX.Value = square.StartPoint.X;
+                bpNumSquareY.Value = square.StartPoint.Y;
+            }
         }
 
         private void bpBtnOn_Click(object sender, EventArgs e)
@@ -617,6 +647,116 @@ namespace ProjektNr1Paczesny72541
             {
                 e.Cancel = true;
             }
+        }
+
+        private void bpNumSquareSide_ValueChanged(object sender, EventArgs e)
+        {
+            if (bpIndexFigurySlajdera >= 0 && bpIndexFigurySlajdera < bpLFG.Count)
+            {
+                var fig = bpLFG[bpIndexFigurySlajdera];
+                if (fig.ShapeType == ShapeType.SquareOutlined || fig.ShapeType == ShapeType.SquareFilled)
+                {
+                    var square = (SquareShape)fig;
+                    int newSide = (int)bpNumSquareSide.Value;
+                    System.Drawing.Point start = square.StartPoint;
+                    System.Drawing.Point newEnd = new System.Drawing.Point(start.X + newSide, start.Y + newSide);
+                    square.ControlPoints[1] = newEnd;
+                    OdswiezRysownice();
+                }
+            }
+        }
+
+        private void bpNumSquareXY_ValueChanged(object sender, EventArgs e)
+        {
+            if (bpIndexFigurySlajdera >= 0 && bpIndexFigurySlajdera < bpLFG.Count)
+            {
+                var fig = bpLFG[bpIndexFigurySlajdera];
+                if (fig.ShapeType == ShapeType.SquareOutlined || fig.ShapeType == ShapeType.SquareFilled)
+                {
+                    var square = (SquareShape)fig;
+                    int side = Math.Abs(square.EndPoint.X - square.StartPoint.X);
+                    int newX = (int)bpNumSquareX.Value;
+                    int newY = (int)bpNumSquareY.Value;
+                    square.ControlPoints[0] = new System.Drawing.Point(newX, newY);
+                    square.ControlPoints[1] = new System.Drawing.Point(newX + side, newY + side);
+                    OdswiezRysownice();
+                }
+            }
+        }
+
+        // MENU STRIP HANDLERS
+        private void drukujBitMapęRysownicyToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (bpPictureBox.Image != null)
+            {
+                PrintDialog printDialog = new PrintDialog();
+                System.Drawing.Printing.PrintDocument printDoc = new System.Drawing.Printing.PrintDocument();
+                printDoc.PrintPage += (s, ev) =>
+                {
+                    ev.Graphics.DrawImage(bpPictureBox.Image, ev.MarginBounds);
+                };
+                printDialog.Document = printDoc;
+                if (printDialog.ShowDialog() == DialogResult.OK)
+                {
+                    printDoc.Print();
+                }
+            }
+            else
+            {
+                MessageBox.Show("Brak obrazu do wydruku.", "Błąd", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void zapiszBitMapęWPlikuToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (bpPictureBox.Image != null)
+            {
+                SaveFileDialog saveDialog = new SaveFileDialog();
+                saveDialog.Filter = "Bitmapy (*.bmp)|*.bmp|PNG (*.png)|*.png|JPEG (*.jpg)|*.jpg";
+                saveDialog.Title = "Zapisz BitMapę w pliku";
+                if (saveDialog.ShowDialog() == DialogResult.OK)
+                {
+                    var format = System.Drawing.Imaging.ImageFormat.Bmp;
+                    if (saveDialog.FileName.EndsWith(".png")) format = System.Drawing.Imaging.ImageFormat.Png;
+                    else if (saveDialog.FileName.EndsWith(".jpg")) format = System.Drawing.Imaging.ImageFormat.Jpeg;
+                    bpPictureBox.Image.Save(saveDialog.FileName, format);
+                }
+            }
+            else
+            {
+                MessageBox.Show("Brak obrazu do zapisania.", "Błąd", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void odtwórzBitMapęRysownicyZPlikuToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            OpenFileDialog openDialog = new OpenFileDialog();
+            openDialog.Filter = "Bitmapy (*.bmp;*.png;*.jpg)|*.bmp;*.png;*.jpg";
+            openDialog.Title = "Odtwórz BitMapę rysownicy z pliku";
+            if (openDialog.ShowDialog() == DialogResult.OK)
+            {
+                try
+                {
+                    var loadedImage = Image.FromFile(openDialog.FileName);
+                    bpPictureBox.Image = new Bitmap(loadedImage);
+                    bpRysownica = Graphics.FromImage(bpPictureBox.Image);
+                    bpPictureBox.Refresh();
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"Błąd podczas wczytywania obrazu: {ex.Message}", "Błąd", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
+        }
+
+        private void exitZFormularzaToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            this.Close();
+        }
+
+        private void restartProgramuToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Application.Restart();
         }
     }
 }

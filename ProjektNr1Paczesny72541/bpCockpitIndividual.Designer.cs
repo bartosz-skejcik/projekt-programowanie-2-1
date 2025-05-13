@@ -58,23 +58,42 @@ namespace ProjektNr1Paczesny72541
             this.bpBtnPrevious = new System.Windows.Forms.Button();
             this.bpBtnNext = new System.Windows.Forms.Button();
             this.bpBtnOn = new System.Windows.Forms.Button();
+            this.bpLblSquareSide = new System.Windows.Forms.Label();
+            this.bpNumSquareSide = new System.Windows.Forms.NumericUpDown();
+            this.bpLblSquareX = new System.Windows.Forms.Label();
+            this.bpNumSquareX = new System.Windows.Forms.NumericUpDown();
+            this.bpLblSquareY = new System.Windows.Forms.Label();
+            this.bpNumSquareY = new System.Windows.Forms.NumericUpDown();
             this.bpBtnShowAllShapes = new System.Windows.Forms.Button();
+            this.bpGrBoxGraphicalAttrs = new System.Windows.Forms.GroupBox();
+            this.menuStrip1 = new System.Windows.Forms.MenuStrip();
+            this.plikToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.drukujBitMapęRysownicyToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.zapiszBitMapęWPlikuToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.odtwórzBitMapęRysownicyZPlikuToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.exitZFormularzaToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.restartProgramuToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.bpPictureBox)).BeginInit();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.bpNumSquareSide)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.bpNumSquareX)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.bpNumSquareY)).BeginInit();
+            this.bpGrBoxGraphicalAttrs.SuspendLayout();
+            this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
             // bpPictureBox
             // 
-            this.bpPictureBox.Location = new System.Drawing.Point(12, 28);
+            this.bpPictureBox.Location = new System.Drawing.Point(12, 49);
             this.bpPictureBox.Name = "bpPictureBox";
-            this.bpPictureBox.Size = new System.Drawing.Size(562, 597);
+            this.bpPictureBox.Size = new System.Drawing.Size(562, 703);
             this.bpPictureBox.TabIndex = 0;
             this.bpPictureBox.TabStop = false;
             // 
             // label1
             // 
-            this.label1.Location = new System.Drawing.Point(12, 9);
+            this.label1.Location = new System.Drawing.Point(12, 30);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(135, 16);
             this.label1.TabIndex = 1;
@@ -82,7 +101,7 @@ namespace ProjektNr1Paczesny72541
             // 
             // bpLblMouseCoordinatesValue
             // 
-            this.bpLblMouseCoordinatesValue.Location = new System.Drawing.Point(153, 9);
+            this.bpLblMouseCoordinatesValue.Location = new System.Drawing.Point(153, 30);
             this.bpLblMouseCoordinatesValue.Name = "bpLblMouseCoordinatesValue";
             this.bpLblMouseCoordinatesValue.Size = new System.Drawing.Size(88, 16);
             this.bpLblMouseCoordinatesValue.TabIndex = 2;
@@ -104,7 +123,7 @@ namespace ProjektNr1Paczesny72541
             this.groupBox1.Controls.Add(this.bpRdElipsFilled);
             this.groupBox1.Controls.Add(this.bpRdSqrFilled);
             this.groupBox1.Controls.Add(this.bpRdRectFilled);
-            this.groupBox1.Location = new System.Drawing.Point(580, 28);
+            this.groupBox1.Location = new System.Drawing.Point(580, 49);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Size = new System.Drawing.Size(354, 422);
             this.groupBox1.TabIndex = 3;
@@ -253,7 +272,7 @@ namespace ProjektNr1Paczesny72541
             // 
             // bpBtnMoveToNewLocation
             // 
-            this.bpBtnMoveToNewLocation.Location = new System.Drawing.Point(580, 456);
+            this.bpBtnMoveToNewLocation.Location = new System.Drawing.Point(580, 477);
             this.bpBtnMoveToNewLocation.Name = "bpBtnMoveToNewLocation";
             this.bpBtnMoveToNewLocation.Size = new System.Drawing.Size(174, 23);
             this.bpBtnMoveToNewLocation.TabIndex = 4;
@@ -262,7 +281,7 @@ namespace ProjektNr1Paczesny72541
             // 
             // bpBtnNewGraphicalAttrs
             // 
-            this.bpBtnNewGraphicalAttrs.Location = new System.Drawing.Point(760, 456);
+            this.bpBtnNewGraphicalAttrs.Location = new System.Drawing.Point(760, 477);
             this.bpBtnNewGraphicalAttrs.Name = "bpBtnNewGraphicalAttrs";
             this.bpBtnNewGraphicalAttrs.Size = new System.Drawing.Size(174, 23);
             this.bpBtnNewGraphicalAttrs.TabIndex = 5;
@@ -277,7 +296,7 @@ namespace ProjektNr1Paczesny72541
             this.groupBox2.Controls.Add(this.bpBtnPrevious);
             this.groupBox2.Controls.Add(this.bpBtnNext);
             this.groupBox2.Controls.Add(this.bpBtnOn);
-            this.groupBox2.Location = new System.Drawing.Point(580, 514);
+            this.groupBox2.Location = new System.Drawing.Point(580, 535);
             this.groupBox2.Name = "groupBox2";
             this.groupBox2.Size = new System.Drawing.Size(354, 111);
             this.groupBox2.TabIndex = 6;
@@ -338,20 +357,134 @@ namespace ProjektNr1Paczesny72541
             this.bpBtnOn.Text = "Włącz";
             this.bpBtnOn.UseVisualStyleBackColor = true;
             // 
+            // bpLblSquareSide
+            // 
+            this.bpLblSquareSide.Location = new System.Drawing.Point(4, 23);
+            this.bpLblSquareSide.Name = "bpLblSquareSide";
+            this.bpLblSquareSide.Size = new System.Drawing.Size(80, 20);
+            this.bpLblSquareSide.TabIndex = 0;
+            this.bpLblSquareSide.Text = "Bok kwadratu:";
+            // 
+            // bpNumSquareSide
+            // 
+            this.bpNumSquareSide.Location = new System.Drawing.Point(94, 23);
+            this.bpNumSquareSide.Maximum = new decimal(new int[] { 500, 0, 0, 0 });
+            this.bpNumSquareSide.Minimum = new decimal(new int[] { 1, 0, 0, 0 });
+            this.bpNumSquareSide.Name = "bpNumSquareSide";
+            this.bpNumSquareSide.Size = new System.Drawing.Size(60, 20);
+            this.bpNumSquareSide.TabIndex = 1;
+            this.bpNumSquareSide.Value = new decimal(new int[] { 50, 0, 0, 0 });
+            // 
+            // bpLblSquareX
+            // 
+            this.bpLblSquareX.Location = new System.Drawing.Point(4, 53);
+            this.bpLblSquareX.Name = "bpLblSquareX";
+            this.bpLblSquareX.Size = new System.Drawing.Size(20, 20);
+            this.bpLblSquareX.TabIndex = 2;
+            this.bpLblSquareX.Text = "X:";
+            // 
+            // bpNumSquareX
+            // 
+            this.bpNumSquareX.Location = new System.Drawing.Point(34, 53);
+            this.bpNumSquareX.Maximum = new decimal(new int[] { 1000, 0, 0, 0 });
+            this.bpNumSquareX.Name = "bpNumSquareX";
+            this.bpNumSquareX.Size = new System.Drawing.Size(60, 20);
+            this.bpNumSquareX.TabIndex = 3;
+            this.bpNumSquareX.Value = new decimal(new int[] { 10, 0, 0, 0 });
+            // 
+            // bpLblSquareY
+            // 
+            this.bpLblSquareY.Location = new System.Drawing.Point(104, 53);
+            this.bpLblSquareY.Name = "bpLblSquareY";
+            this.bpLblSquareY.Size = new System.Drawing.Size(20, 20);
+            this.bpLblSquareY.TabIndex = 4;
+            this.bpLblSquareY.Text = "Y:";
+            // 
+            // bpNumSquareY
+            // 
+            this.bpNumSquareY.Location = new System.Drawing.Point(134, 53);
+            this.bpNumSquareY.Maximum = new decimal(new int[] { 1000, 0, 0, 0 });
+            this.bpNumSquareY.Name = "bpNumSquareY";
+            this.bpNumSquareY.Size = new System.Drawing.Size(60, 20);
+            this.bpNumSquareY.TabIndex = 5;
+            this.bpNumSquareY.Value = new decimal(new int[] { 10, 0, 0, 0 });
+            // 
             // bpBtnShowAllShapes
             // 
-            this.bpBtnShowAllShapes.Location = new System.Drawing.Point(580, 485);
+            this.bpBtnShowAllShapes.Location = new System.Drawing.Point(580, 506);
             this.bpBtnShowAllShapes.Name = "bpBtnShowAllShapes";
             this.bpBtnShowAllShapes.Size = new System.Drawing.Size(348, 23);
             this.bpBtnShowAllShapes.TabIndex = 7;
             this.bpBtnShowAllShapes.Text = "Pokaż wszystkie figury";
             this.bpBtnShowAllShapes.UseVisualStyleBackColor = true;
             // 
+            // bpGrBoxGraphicalAttrs
+            // 
+            this.bpGrBoxGraphicalAttrs.Controls.Add(this.bpNumSquareY);
+            this.bpGrBoxGraphicalAttrs.Controls.Add(this.bpLblSquareSide);
+            this.bpGrBoxGraphicalAttrs.Controls.Add(this.bpLblSquareY);
+            this.bpGrBoxGraphicalAttrs.Controls.Add(this.bpNumSquareX);
+            this.bpGrBoxGraphicalAttrs.Controls.Add(this.bpNumSquareSide);
+            this.bpGrBoxGraphicalAttrs.Controls.Add(this.bpLblSquareX);
+            this.bpGrBoxGraphicalAttrs.Location = new System.Drawing.Point(580, 652);
+            this.bpGrBoxGraphicalAttrs.Name = "bpGrBoxGraphicalAttrs";
+            this.bpGrBoxGraphicalAttrs.Size = new System.Drawing.Size(354, 100);
+            this.bpGrBoxGraphicalAttrs.TabIndex = 8;
+            this.bpGrBoxGraphicalAttrs.TabStop = false;
+            this.bpGrBoxGraphicalAttrs.Text = "Atrybuty graficzne";
+            // 
+            // menuStrip1
+            // 
+            this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] { this.plikToolStripMenuItem });
+            this.menuStrip1.Location = new System.Drawing.Point(0, 0);
+            this.menuStrip1.Name = "menuStrip1";
+            this.menuStrip1.Size = new System.Drawing.Size(946, 24);
+            this.menuStrip1.TabIndex = 9;
+            this.menuStrip1.Text = "menuStrip1";
+            // 
+            // plikToolStripMenuItem
+            // 
+            this.plikToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] { this.drukujBitMapęRysownicyToolStripMenuItem, this.zapiszBitMapęWPlikuToolStripMenuItem, this.odtwórzBitMapęRysownicyZPlikuToolStripMenuItem, this.exitZFormularzaToolStripMenuItem, this.restartProgramuToolStripMenuItem });
+            this.plikToolStripMenuItem.Name = "plikToolStripMenuItem";
+            this.plikToolStripMenuItem.Size = new System.Drawing.Size(38, 20);
+            this.plikToolStripMenuItem.Text = "Plik";
+            // 
+            // drukujBitMapęRysownicyToolStripMenuItem
+            // 
+            this.drukujBitMapęRysownicyToolStripMenuItem.Name = "drukujBitMapęRysownicyToolStripMenuItem";
+            this.drukujBitMapęRysownicyToolStripMenuItem.Size = new System.Drawing.Size(259, 22);
+            this.drukujBitMapęRysownicyToolStripMenuItem.Text = "Drukuj BitMapę rysownicy";
+            // 
+            // zapiszBitMapęWPlikuToolStripMenuItem
+            // 
+            this.zapiszBitMapęWPlikuToolStripMenuItem.Name = "zapiszBitMapęWPlikuToolStripMenuItem";
+            this.zapiszBitMapęWPlikuToolStripMenuItem.Size = new System.Drawing.Size(259, 22);
+            this.zapiszBitMapęWPlikuToolStripMenuItem.Text = "Zapisz BitMapę w pliku";
+            // 
+            // odtwórzBitMapęRysownicyZPlikuToolStripMenuItem
+            // 
+            this.odtwórzBitMapęRysownicyZPlikuToolStripMenuItem.Name = "odtwórzBitMapęRysownicyZPlikuToolStripMenuItem";
+            this.odtwórzBitMapęRysownicyZPlikuToolStripMenuItem.Size = new System.Drawing.Size(259, 22);
+            this.odtwórzBitMapęRysownicyZPlikuToolStripMenuItem.Text = "Odtwórz BitMapę rysownicy z pliku";
+            // 
+            // exitZFormularzaToolStripMenuItem
+            // 
+            this.exitZFormularzaToolStripMenuItem.Name = "exitZFormularzaToolStripMenuItem";
+            this.exitZFormularzaToolStripMenuItem.Size = new System.Drawing.Size(259, 22);
+            this.exitZFormularzaToolStripMenuItem.Text = "Exit z formularza";
+            // 
+            // restartProgramuToolStripMenuItem
+            // 
+            this.restartProgramuToolStripMenuItem.Name = "restartProgramuToolStripMenuItem";
+            this.restartProgramuToolStripMenuItem.Size = new System.Drawing.Size(259, 22);
+            this.restartProgramuToolStripMenuItem.Text = "Restart programu";
+            // 
             // bpCockpitIndividual
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(946, 634);
+            this.ClientSize = new System.Drawing.Size(946, 758);
+            this.Controls.Add(this.bpGrBoxGraphicalAttrs);
             this.Controls.Add(this.bpBtnShowAllShapes);
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.bpBtnNewGraphicalAttrs);
@@ -360,6 +493,8 @@ namespace ProjektNr1Paczesny72541
             this.Controls.Add(this.bpLblMouseCoordinatesValue);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.bpPictureBox);
+            this.Controls.Add(this.menuStrip1);
+            this.MainMenuStrip = this.menuStrip1;
             this.Name = "bpCockpitIndividual";
             this.Text = "bpCockpitIndividual";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.bpCockpitIndividual_FormClosing);
@@ -367,8 +502,30 @@ namespace ProjektNr1Paczesny72541
             this.groupBox1.ResumeLayout(false);
             this.groupBox2.ResumeLayout(false);
             this.groupBox2.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.bpNumSquareSide)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.bpNumSquareX)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.bpNumSquareY)).EndInit();
+            this.bpGrBoxGraphicalAttrs.ResumeLayout(false);
+            this.menuStrip1.ResumeLayout(false);
+            this.menuStrip1.PerformLayout();
             this.ResumeLayout(false);
+            this.PerformLayout();
         }
+
+        private System.Windows.Forms.ToolStripMenuItem restartProgramuToolStripMenuItem;
+
+        private System.Windows.Forms.ToolStripMenuItem exitZFormularzaToolStripMenuItem;
+
+        private System.Windows.Forms.ToolStripMenuItem odtwórzBitMapęRysownicyZPlikuToolStripMenuItem;
+
+        private System.Windows.Forms.ToolStripMenuItem zapiszBitMapęWPlikuToolStripMenuItem;
+
+        private System.Windows.Forms.ToolStripMenuItem drukujBitMapęRysownicyToolStripMenuItem;
+
+        private System.Windows.Forms.MenuStrip menuStrip1;
+        private System.Windows.Forms.ToolStripMenuItem plikToolStripMenuItem;
+
+        private System.Windows.Forms.GroupBox bpGrBoxGraphicalAttrs;
 
         private System.Windows.Forms.Button bpBtnShowAllShapes;
 
@@ -412,6 +569,13 @@ namespace ProjektNr1Paczesny72541
         private System.Windows.Forms.Label label1;
 
         private System.Windows.Forms.PictureBox bpPictureBox;
+
+        private System.Windows.Forms.NumericUpDown bpNumSquareSide;
+        private System.Windows.Forms.NumericUpDown bpNumSquareX;
+        private System.Windows.Forms.NumericUpDown bpNumSquareY;
+        private System.Windows.Forms.Label bpLblSquareSide;
+        private System.Windows.Forms.Label bpLblSquareX;
+        private System.Windows.Forms.Label bpLblSquareY;
 
         #endregion
     }
