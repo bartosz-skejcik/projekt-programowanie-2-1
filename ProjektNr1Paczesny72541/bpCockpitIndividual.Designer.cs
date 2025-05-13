@@ -58,6 +58,7 @@ namespace ProjektNr1Paczesny72541
             this.bpBtnPrevious = new System.Windows.Forms.Button();
             this.bpBtnNext = new System.Windows.Forms.Button();
             this.bpBtnOn = new System.Windows.Forms.Button();
+            this.bpBtnShowAllShapes = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.bpPictureBox)).BeginInit();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
@@ -67,7 +68,7 @@ namespace ProjektNr1Paczesny72541
             // 
             this.bpPictureBox.Location = new System.Drawing.Point(12, 28);
             this.bpPictureBox.Name = "bpPictureBox";
-            this.bpPictureBox.Size = new System.Drawing.Size(562, 568);
+            this.bpPictureBox.Size = new System.Drawing.Size(562, 597);
             this.bpPictureBox.TabIndex = 0;
             this.bpPictureBox.TabStop = false;
             // 
@@ -276,7 +277,7 @@ namespace ProjektNr1Paczesny72541
             this.groupBox2.Controls.Add(this.bpBtnPrevious);
             this.groupBox2.Controls.Add(this.bpBtnNext);
             this.groupBox2.Controls.Add(this.bpBtnOn);
-            this.groupBox2.Location = new System.Drawing.Point(580, 485);
+            this.groupBox2.Location = new System.Drawing.Point(580, 514);
             this.groupBox2.Name = "groupBox2";
             this.groupBox2.Size = new System.Drawing.Size(354, 111);
             this.groupBox2.TabIndex = 6;
@@ -290,7 +291,7 @@ namespace ProjektNr1Paczesny72541
             this.bpBtnOff.Name = "bpBtnOff";
             this.bpBtnOff.Size = new System.Drawing.Size(75, 86);
             this.bpBtnOff.TabIndex = 5;
-            this.bpBtnOff.Text = "Włącz";
+            this.bpBtnOff.Text = "Wyłącz";
             this.bpBtnOff.UseVisualStyleBackColor = true;
             // 
             // bpTxtIndexLFG
@@ -337,11 +338,21 @@ namespace ProjektNr1Paczesny72541
             this.bpBtnOn.Text = "Włącz";
             this.bpBtnOn.UseVisualStyleBackColor = true;
             // 
+            // bpBtnShowAllShapes
+            // 
+            this.bpBtnShowAllShapes.Location = new System.Drawing.Point(580, 485);
+            this.bpBtnShowAllShapes.Name = "bpBtnShowAllShapes";
+            this.bpBtnShowAllShapes.Size = new System.Drawing.Size(348, 23);
+            this.bpBtnShowAllShapes.TabIndex = 7;
+            this.bpBtnShowAllShapes.Text = "Pokaż wszystkie figury";
+            this.bpBtnShowAllShapes.UseVisualStyleBackColor = true;
+            // 
             // bpCockpitIndividual
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(946, 608);
+            this.ClientSize = new System.Drawing.Size(946, 634);
+            this.Controls.Add(this.bpBtnShowAllShapes);
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.bpBtnNewGraphicalAttrs);
             this.Controls.Add(this.bpBtnMoveToNewLocation);
@@ -358,6 +369,8 @@ namespace ProjektNr1Paczesny72541
             this.groupBox2.PerformLayout();
             this.ResumeLayout(false);
         }
+
+        private System.Windows.Forms.Button bpBtnShowAllShapes;
 
         private System.Windows.Forms.RadioButton bpRdFilledPie;
 

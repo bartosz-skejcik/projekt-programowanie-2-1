@@ -46,6 +46,7 @@
         <Reference Include="System.Xml"/>
     </ItemGroup>
     <ItemGroup>
+        <Compile Include="AdvancedShapes.cs" />
         <Compile Include="bpCockpitIndividual.cs">
           <SubType>Form</SubType>
         </Compile>
@@ -66,8 +67,10 @@
         </Compile>
         <Compile Include="GeometricShapes.cs" />
         <Compile Include="Helpers.cs" />
+        <Compile Include="InputDialogForm.cs" />
         <Compile Include="Program.cs"/>
         <Compile Include="Properties\AssemblyInfo.cs"/>
+        <Compile Include="ShapeAttributesForm.cs" />
         <EmbeddedResource Include="bpCockpitIndividual.resx">
           <DependentUpon>bpCockpitIndividual.cs</DependentUpon>
         </EmbeddedResource>
